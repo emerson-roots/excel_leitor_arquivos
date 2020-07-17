@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,10 +25,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Br
  * 
- * necessário bibliotecas inclusas no projeto
+ * necessario bibliotecas inclusas no projeto
  * 
  */
-public class LendoXLSX {
+public class LerDadosExcelXLSX {
 
 	/**
 	 * @param args the command line arguments
@@ -41,19 +40,23 @@ public class LendoXLSX {
 
 	}
 
-	public static void leituraColunasExcel() {
-
+	public static List<List<String>> leituraColunasExcel() {
+		
+		//variavel que dara o retorno ao metodo
+		List<List<String>> dados = new ArrayList<>();
+		
 		FileInputStream fisPlanilha = null;
+		String diretorioPlanilhaElemax = "D:/ELEMAX ELEVADORES LTDA. (GERAL)/ELEMAX ELEVADORES LTDA/Elemax.xlsm";
 
 		try {
-			File file = new File("D:\\teste.xlsx");
+			File file = new File(diretorioPlanilhaElemax);
 			fisPlanilha = new FileInputStream(file);
 
 			// cria um workbook = planilha toda com todas as abas
 			XSSFWorkbook workbook = new XSSFWorkbook(fisPlanilha);
 
 			// recuperamos apenas a primeira aba ou primeira planilha
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			XSSFSheet sheet = workbook.getSheetAt(1);
 
 			// retorna todas as linhas da planilha 0 (aba 1)
 			Iterator<Row> rowIterator = sheet.iterator();
@@ -75,7 +78,8 @@ public class LendoXLSX {
 				// pegamos todas as celulas desta linha
 				Iterator<Cell> cellIterator = row.iterator();
 
-				// varremos todas as celulas da linha atual
+				// varremos todas as celulas da linha atual 
+				// insere valores nas listas de acordo com as colunas
 				while (cellIterator.hasNext()) {
 
 					// criamos uma celula
@@ -83,24 +87,23 @@ public class LendoXLSX {
 
 					switch (cell.getColumnIndex()) {
 
-					case 0:// Cell.CELL_TYPE_STRING:
-						System.out.println("coluna 0 " + cell.toString());
+					case 1:// Cell.CELL_TYPE_STRING:
+						System.out.println("coluna 01" + cell.toString());
 						nomeCliente.add(cell.toString());
-
 						break;
 
-					case 1:// Cell.CELL_TYPE_NUMERIC:
-						System.out.println("coluna 1: " + cell.toString());
+					case 2:// Cell.CELL_TYPE_NUMERIC:
+						System.out.println("coluna 2: " + cell.toString());
 						cpfOuCnpj.add(cell.toString());
 						break;
 
-					case 2:// Cell.CELL_TYPE_FORMULA:
-						System.out.println("coluna 2: " + cell.toString());
+					case 3:// Cell.CELL_TYPE_FORMULA:
+						System.out.println("coluna 4: " + cell.toString());
 						adm.add(cell.toString());
 						break;
 
-					case 3:// Cell.CELL_TYPE_FORMULA:
-						System.out.println("coluna 3: " + cell.toString());
+					case 4:// Cell.CELL_TYPE_FORMULA:
+						System.out.println("coluna 4: " + cell.toString());
 						notaFiscal.add(cell.toString());
 						break;
 					}
@@ -108,24 +111,14 @@ public class LendoXLSX {
 				}
 			}
 			
-			
-			System.out.println("       ");
-			System.out.println("       ");
-			System.out.println("       ");
-			System.out.println("##############################");
-			System.out.println("       ");
-			System.out.println("       ");
-			System.out.println("       ");
-			
 			//recebe as listas criadas acima
-			List<List<String>> dados = new ArrayList<>();
-			dados = Arrays.asList(nomeCliente, cpfOuCnpj, adm, notaFiscal);
+			dados = Arrays.asList(nomeCliente, cpfOuCnpj, adm);
 
 			//percorre colunas
 			for (int coluna = 0; coluna < dados.size(); coluna++) {
 				System.out.println("================= COLUNA: " + coluna + " - Nome Coluna: " + dados.get(coluna).get(0));
 				
-				//percorre linhas = inicia pelo 1 para pular coluna de cabeçalhos
+				//percorre linhas = inicia pelo 1 para pular coluna de cabeï¿½alhos
 				for (int linha = 1; linha < dados.get(coluna).size(); linha++) {
 					System.out.println("LINHA " + linha + ": " + dados.get(coluna).get(linha));
 
@@ -136,17 +129,19 @@ public class LendoXLSX {
 			
 
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
-			Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
 			try {
 				fisPlanilha.close();
 			} catch (IOException ex) {
-				Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-
+		
+		return dados;
+		
 	}
 
 	public static void leituraLinhasExcel() {
@@ -199,14 +194,14 @@ public class LendoXLSX {
 			}
 
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
-			Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
 			try {
 				fisPlanilha.close();
 			} catch (IOException ex) {
-				Logger.getLogger(LendoXLSX.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(LerDadosExcelXLSX.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
